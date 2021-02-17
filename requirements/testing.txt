@@ -1,0 +1,6 @@
+-r requirements/production.txt
+
+pytest==6.2.2
+pytest-cov==2.11.1
+pytest-flask==1.1.0
+coverage==5.4

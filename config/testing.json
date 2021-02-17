@@ -1,0 +1,56 @@
+[
+  {
+    "name": "FLASK_ENV",
+    "value": "production"
+  },
+  {
+    "name": "FLASK_CONFIG",
+    "value": "testing"
+  },
+  {
+      "name": "FLASK_APP",
+      "value": "application/wsgi.py"
+  },
+  {
+    "name": "SECRET_KEY",
+    "value": "super-secret-key-987654rtyhujjhbsouijy"
+  },
+
+  {
+    "name": "USER_ENABLE_EMAIL",
+    "value": "False"
+  },
+  {
+    "name": "USER_ENABLE_CHANGE_USERNAME",
+    "value": "False"
+  },
+  {
+    "name": "USER_ENABLE_RETYPE_PASSWORD",
+    "value": "False"
+  },
+
+  {
+    "name": "MONGODB_DB",
+    "value": "testing"
+  },
+  {
+    "name": "MONGODB_ALIAS",
+    "value": "testing"
+  },
+  {
+    "name": "MONGODB_HOST",
+    "value": "mongo"
+  },
+  {
+    "name": "MONGODB_PORT",
+    "value": 27017
+  },
+  {
+    "name": "MONGODB_USERNAME",
+    "value": "admin"
+  },
+  {
+    "name": "MONGODB_PASSWORD",
+    "value": "password"
+  }
+]
