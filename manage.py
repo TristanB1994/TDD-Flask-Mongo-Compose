@@ -102,7 +102,7 @@ def db_startup_script(write, stage, username, password, db):
     admin_password_str = os.getenv("MONGO_INITDB_ROOT_PASSWORD")
     db_str = os.getenv("MONGO_INITDB_DATABASE")
 
-    MONGO_CONFIG_PATH = f"docker/mongo/{stage}/docker-entrypoint-initdb.d/init-mongo.js"
+    MONGO_CONFIG_PATH = f"{DOCKER_PATH}/mongo/{stage}/docker-entrypoint-initdb.d/"
 
     if os.path.isfile(MONGO_CONFIG_PATH) and write == False:
         print(f"This function overwrites the current init-mongo.js file, to process add --write flag")
@@ -110,7 +110,11 @@ def db_startup_script(write, stage, username, password, db):
     if not os.path.isfile(MONGO_CONFIG_PATH):
         write = True
 
-    if len( os.listdir(os.path.join(DOCKER_PATH, f'mongo/{stage}/mongodata')) ) > 0:
+    if not os.path.isdir( MONGO_CONFIG_PATH ):
+        print(f"caught {MONGO_CONFIG_PATH}")
+        os.makedirs(MONGO_CONFIG_PATH)
+
+    if len( os.listdir(MONGO_DATA_PATH) ) > 0:
         print(f"To generate startup script, mongodata must be empty")
         write = False
 
@@ -123,7 +127,7 @@ def db_startup_script(write, stage, username, password, db):
         make_admin_statement = "db.createUser({ user: "+ f"'{admin_user_str}',"+f"pwd: '{admin_password_str}',"+"roles: [{role: 'readWrite',db: "+f"'{db_str}'"+"}]});\n"
 
         try:
-            with open(MONGO_CONFIG_PATH, 'w+') as f:
+            with open(f"{MONGO_CONFIG_PATH}init-mongo.js", 'w+') as f:
                 f.write(select_db_statement)
                 f.write(make_admin_statement)
                 f.write(insert_db_statement)
