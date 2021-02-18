@@ -114,6 +114,10 @@ def db_startup_script(write, stage, username, password, db):
         print(f"caught {MONGO_CONFIG_PATH}")
         os.makedirs(MONGO_CONFIG_PATH)
 
+    if not os.path.isdir( MONGO_DATA_PATH ):
+        print(f"caught {MONGO_DATA_PATH}")
+        os.makedirs(MONGO_DATA_PATH)
+
     if len( os.listdir(MONGO_DATA_PATH) ) > 0:
         print(f"To generate startup script, mongodata must be empty")
         write = False
@@ -131,7 +135,7 @@ def db_startup_script(write, stage, username, password, db):
                 f.write(select_db_statement)
                 f.write(make_admin_statement)
                 f.write(insert_db_statement)
-                print(f"f: {f}")
+                print(f"f: {f.name}")
             print(f"Script initialized")
         except Exception as error:
             print(f"error writing init script: {error}")
