@@ -18,7 +18,6 @@ def setenv(variable, default):
 setenv("APPLICATION_CONFIG", "development")
 
 APPLICATION_CONFIG_PATH = "config"
-MONGO_CONFIG_PATH = f"docker/mongo/{os.getenv('APPLICATION_CONFIG')}/docker-entrypoint-initdb.d/init-mongo.js"
 MONGO_BACKUP_PATH = f"docker/mongo/{os.getenv('APPLICATION_CONFIG')}/dump"
 MONGO_DATA_PATH = f"docker/mongo/{os.getenv('APPLICATION_CONFIG')}/mongodata"
 DOCKER_PATH = "docker"
@@ -98,12 +97,12 @@ def db_startup_script(write, stage, username, password, db):
         print(f"caught testing stage")
         write = True 
 
-
     # sets defaults based on config file
     admin_user_str = os.getenv("MONGO_INITDB_ROOT_USERNAME")
     admin_password_str = os.getenv("MONGO_INITDB_ROOT_PASSWORD")
     db_str = os.getenv("MONGO_INITDB_DATABASE")
 
+    MONGO_CONFIG_PATH = f"docker/mongo/{stage}/docker-entrypoint-initdb.d/init-mongo.js"
 
     if os.path.isfile(MONGO_CONFIG_PATH) and write == False:
         print(f"This function overwrites the current init-mongo.js file, to process add --write flag")
@@ -124,10 +123,11 @@ def db_startup_script(write, stage, username, password, db):
         make_admin_statement = "db.createUser({ user: "+ f"'{admin_user_str}',"+f"pwd: '{admin_password_str}',"+"roles: [{role: 'readWrite',db: "+f"'{db_str}'"+"}]});\n"
 
         try:
-            with open(MONGO_CONFIG_PATH, 'w') as f:
+            with open(MONGO_CONFIG_PATH, 'w+') as f:
                 f.write(select_db_statement)
                 f.write(make_admin_statement)
                 f.write(insert_db_statement)
+                print(f"f: {f}")
             print(f"Script initialized")
         except Exception as error:
             print(f"error writing init script: {error}")
