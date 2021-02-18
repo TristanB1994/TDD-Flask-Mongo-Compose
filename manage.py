@@ -258,7 +258,7 @@ def test(filenames):
     ##### Modify for mongo
     ##### Modify for mongo
     
-    cmdline = ["pytest", "-s", "--verbosity=3", "--cov-report=term-missing","--cov=application"] # ,f"--cov-config={COVERAGE_FILE}", "-svv",
+    cmdline = ["pytest", "-s", "--verbosity=4", "--cov-report=term-missing","--cov=application"] # ,f"--cov-config={COVERAGE_FILE}", "-svv",
     cmdline.extend(filenames)
     print(f"test command: {cmdline}")
     subprocess.call(cmdline)

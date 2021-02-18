@@ -1,0 +1,13 @@
+[
+    {
+        "name": "admin",
+        "value": {
+            "email": "tpb.lime@gmail.com",
+            "username": "admin",
+            "password": "password",
+            "first_name": "tristan",
+            "last_name": "B",
+            "roles": "admin"
+        }
+    }
+]

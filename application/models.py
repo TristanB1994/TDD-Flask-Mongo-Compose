@@ -32,4 +32,4 @@ class User(db.Document, UserMixin):
         return f"<User: {self.username}"
 
     def _get_email(self):
-        return f"<User email: {self.email}"
+        return self.email
