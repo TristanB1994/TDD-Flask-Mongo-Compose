@@ -3,31 +3,26 @@ version: '3.4'
 services:
 
   db:
-    image: mongo:latest
+    build:
+      context: ${PWD}
+      dockerfile: docker/mongo/Dockerfile
+    # image: mongo:latest
     # container_name: mongo
-    restart: always
+    restart: unless-stopped
     environment: 
         MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
         MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
         MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
     ports:
-        - ${MONGODB_PORT}:27017
+        - 27017
     volumes:
-        - ${PWD}/docker/mongo/mongodata:/data/db     
-        - ${PWD}/docker/mongo/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d    
-        - ${PWD}/docker/mongo/dump:/dump   
+        - ${PWD}/docker/mongo/development/mongodata:/data/db 
+        - ${PWD}/docker/mongo/development/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d    
+        - ${PWD}/docker/mongo/development/dump:/dump   
+    user: 1000:1000
     # networks:
     #         - app-network
-  # db:
-  #   image: postgres
-  #   environment:
-  #     POSTGRES_DB: ${POSTGRES_DB}
-  #     POSTGRES_USER: ${POSTGRES_USER}
-  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  #   ports:
-  #     - "${POSTGRES_PORT}:5432"
-  #   volumes:
-  #     - pgdata:/var/lib/postgresql/data
+
 
   web:
     build:
@@ -48,3 +43,7 @@ services:
     ports:
       - "5000:5000"
 
+# volumes:
+#   mongo:
+#     name: /home/tpb/code/registry/registry/docker/mongo
+    

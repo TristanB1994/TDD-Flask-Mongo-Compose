@@ -33,24 +33,24 @@
     "value": "False"
   },
   {
-    "name": "USER_APP_NAME",
-    "value": "Registry"
-  },
-  {
     "name": "USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL",
     "value": "True"
   },
-
+  {
+    "name": "USER_APP_NAME",
+    "value": "Registry"
+  },
   
   {
     "name": "MONGODB_SETTINGS",
     "value": {
       "alias":"registry",
       "db": "registry",
-      "host": "mongo",
+      "host": "db",
       "port": 27017,
       "username": "admin",
-      "password": "password"
+      "password": "password",
+      "connect": "false"
       }
   },
 
@@ -78,6 +78,10 @@
   {
     "name": "MONGODB_PASSWORD",
     "value": "password"
+  },
+  {
+    "name": "MONGODB_CONNECT",
+    "value": "False"
   }
 
 ]

@@ -23,6 +23,7 @@ class Config(object):
     USER_ENABLE_CHANGE_USERNAME = eval(os.environ['USER_ENABLE_CHANGE_USERNAME'])
     USER_REQUIRE_RETYPE_PASSWORD = eval(os.environ['USER_REQUIRE_RETYPE_PASSWORD'])
     USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL = eval(os.environ['USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL'])
+    MONGODB_CONNECT = eval(os.getenv('MONGODB_CONNECT'))
 
 
 class ProductionConfig(Config):

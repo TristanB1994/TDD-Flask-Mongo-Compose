@@ -18,8 +18,12 @@ def setenv(variable, default):
 setenv("APPLICATION_CONFIG", "development")
 
 APPLICATION_CONFIG_PATH = "config"
-MONGO_CONFIG_PATH = "docker/mongo/docker-entrypoint-initdb.d/init-mongo.js"
+MONGO_CONFIG_PATH = f"docker/mongo/{os.getenv('APPLICATION_CONFIG')}/docker-entrypoint-initdb.d/init-mongo.js"
+MONGO_BACKUP_PATH = f"docker/mongo/{os.getenv('APPLICATION_CONFIG')}/dump"
+MONGO_DATA_PATH = f"docker/mongo/{os.getenv('APPLICATION_CONFIG')}/mongodata"
 DOCKER_PATH = "docker"
+COVERAGE_FILE = os.path.join(os.getcwd(), '.coveragerc')
+
 
 
 def app_config_file(config):
@@ -42,15 +46,15 @@ def configure_env(config):
         try:
             if key == 'MONGODB_SETTINGS':
                 setenv(key, json.dumps(value))
-                print(f"Set {key}:{value}")
+                # print(f"Set {key}:{value}")
 
             if key in os.environ:
-                print(f"duplicate: {key}:{value}")
+                # print(f"duplicate: {key}:{value}")
                 pass
 
             if not key in os.environ:
                 setenv(key, value)
-                print(f"Set {key}:{value}")
+                # print(f"Set {key}:{value}")
 
         except Exception as error:
             print(f"config variable: {key}:{value} : {error}")
@@ -62,10 +66,11 @@ def cli():
 # @cli.command()
 @cli.command(context_settings={"ignore_unknown_options": True})
 @click.option('--write/--no-write', default=False)
+@click.option('--stage', envvar='APPLICATION_CONFIG')
 @click.option('--username', envvar='MONGO_INITDB_ROOT_USERNAME')
 @click.option('--password', envvar='MONGO_INITDB_ROOT_PASSWORD')
 @click.option('--db', envvar='MONGO_INITDB_ROOT_DB')
-def db_startup_script(write, username, password, db):
+def db_startup_script(write, stage, username, password, db):
 
     """
     Checks in "docker/mongo/docker-entrypoint-initdb.d" for init-mongo.js script. 
@@ -82,21 +87,23 @@ def db_startup_script(write, username, password, db):
     :env 'db_str' define application database MONGO_INITDB_DATABASE
     
     """
-    configure_env(os.getenv("APPLICATION_CONFIG"))
+
+    # Checks for config settings, sets them if not present
+    if ( os.getenv("MONGO_INITDB_ROOT_USERNAME") or os.getenv("MONGO_INITDB_ROOT_PASSWORD") or os.getenv("MONGO_INITDB_DATABASE") ) == None:
+        
+        configure_env(stage)
+        print(f"initialized {stage} env variables")
+        
+    if stage == 'testing':
+        print(f"caught testing stage")
+        write = True 
+
 
     # sets defaults based on config file
     admin_user_str = os.getenv("MONGO_INITDB_ROOT_USERNAME")
     admin_password_str = os.getenv("MONGO_INITDB_ROOT_PASSWORD")
     db_str = os.getenv("MONGO_INITDB_DATABASE")
 
-    # admin_dict = {
-    #     str('user''): admin_user_str,
-    #     str('pwd'): admin_password_str,
-    #     str('roles'): [{
-    #         str('role'): 'readWrite',
-    #         str('db'): db_str
-    #     }]
-    # }
 
     if os.path.isfile(MONGO_CONFIG_PATH) and write == False:
         print(f"This function overwrites the current init-mongo.js file, to process add --write flag")
@@ -104,7 +111,7 @@ def db_startup_script(write, username, password, db):
     if not os.path.isfile(MONGO_CONFIG_PATH):
         write = True
 
-    if len( os.listdir(os.path.join(DOCKER_PATH, 'mongo/mongodata')) ) > 0:
+    if len( os.listdir(os.path.join(DOCKER_PATH, f'mongo/{stage}/mongodata')) ) > 0:
         print(f"To generate startup script, mongodata must be empty")
         write = False
 
@@ -121,6 +128,7 @@ def db_startup_script(write, username, password, db):
                 f.write(select_db_statement)
                 f.write(make_admin_statement)
                 f.write(insert_db_statement)
+            print(f"Script initialized")
         except Exception as error:
             print(f"error writing init script: {error}")
 
@@ -143,7 +151,7 @@ def flask(subcommand):
 
 def docker_compose_cmdline(commands_string=None):
     config = os.getenv("APPLICATION_CONFIG")
-    print(f"config: {config}")
+    print(f"config: {config}") #, os_env: {os.environ}")
 
     configure_env(config)
 
@@ -214,6 +222,7 @@ def run_mongo(statements, database=None):
 def wait_for_logs(cmdline, message):
     logs = subprocess.check_output(cmdline)
     while message not in logs.decode("utf-8"):
+        # print(logs)
         time.sleep(0.1)
         logs = subprocess.check_output(cmdline)
 
@@ -221,6 +230,9 @@ def wait_for_logs(cmdline, message):
 @cli.command()
 @click.argument("filenames", nargs=-1)
 def test(filenames):
+    """
+    Initializes test environment, loads testing config and sets it to env variables, generates init script if applicable for mongo, spins mongo container, then executes pytest
+    """
     os.environ["APPLICATION_CONFIG"] = "testing"
     configure_env(os.getenv("APPLICATION_CONFIG"))
 
@@ -228,18 +240,19 @@ def test(filenames):
     subprocess.call(cmdline)
 
     cmdline = docker_compose_cmdline("logs db")
-    wait_for_logs(cmdline, "ready to accept connections")
+    wait_for_logs(cmdline, "Waiting for connections")
 
     ##### Modify for mongo
     ##### Modify for mongo
 
-    run_mongo([f"CREATE DATABASE {os.getenv('APPLICATION_DB')}"])
+    # run_mongo([f"CREATE DATABASE {os.getenv('APPLICATION_DB')}"])
 
     ##### Modify for mongo
     ##### Modify for mongo
     
-    cmdline = ["pytest", "-svv", "--cov=application", "--cov-report=term-missing"]
+    cmdline = ["pytest", "-s", "--verbosity=3", "--cov-report=term-missing","--cov=application"] # ,f"--cov-config={COVERAGE_FILE}", "-svv",
     cmdline.extend(filenames)
+    print(f"test command: {cmdline}")
     subprocess.call(cmdline)
 
     cmdline = docker_compose_cmdline("down")
@@ -256,7 +269,7 @@ def scenario():
 def up(name):
     os.environ["APPLICATION_CONFIG"] = f"scenario_{name}"
     config = os.getenv("APPLICATION_CONFIG")
-    print(f"config: {config}")
+    # print(f"config: {config}")
 
     scenario_config_source_file = app_config_file("scenario")
     scenario_config_file = app_config_file(config)

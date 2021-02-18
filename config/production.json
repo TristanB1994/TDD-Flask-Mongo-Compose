@@ -1,38 +1,80 @@
 [
-    {
-      "name": "FLASK_ENV",
-      "value": "production"
-    },
-    {
-      "name": "FLASK_CONFIG",
-      "value": "production"
-    },
-    {
-        "name": "FLASK_APP",
-        "value": "application/wsgi.py"
-    },
-    {
-      "name": "POSTGRES_DB",
-      "value": "postgres"
-    },
-    {
-      "name": "POSTGRES_USER",
-      "value": "postgres"
-    },
-    {
-      "name": "POSTGRES_HOSTNAME",
-      "value": "localhost"
-    },
-    {
-      "name": "POSTGRES_PORT",
-      "value": "5432"
-    },
-    {
-      "name": "POSTGRES_PASSWORD",
-      "value": "postgres"
-    },
-    {
-      "name": "APPLICATION_DB",
-      "value": "application"
-    }
-  ]
+  {
+    "name": "FLASK_ENV",
+    "value": "production"
+  },
+  {
+    "name": "FLASK_CONFIG",
+    "value": "production"
+  },
+  {
+      "name": "FLASK_APP",
+      "value": "application/wsgi.py"
+  },
+  {
+    "name": "SECRET_KEY",
+    "value": "super-secret-key-987654rtyhujjhbsouijy"
+  },
+  {
+    "name": "APPLICATION_DB",
+    "value": "registry"
+  },
+
+  {
+    "name": "USER_ENABLE_EMAIL",
+    "value": "False"
+  },
+  {
+    "name": "USER_ENABLE_CHANGE_USERNAME",
+    "value": "False"
+  },
+  {
+    "name": "USER_REQUIRE_RETYPE_PASSWORD",
+    "value": "False"
+  },
+  {
+    "name": "USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL",
+    "value": "True"
+  },
+  {
+    "name": "USER_APP_NAME",
+    "value": "Registry"
+  },
+
+  {
+    "name": "MONGO_INITDB_ROOT_USERNAME",
+    "value": "admin"
+  },
+  {
+    "name": "MONGO_INITDB_ROOT_PASSWORD",
+    "value": "password"
+  },
+  {
+    "name": "MONGO_INITDB_DATABASE",
+    "value": "registry"
+  },
+  {
+    "name": "MONGODB_USER",
+    "value": "admin"
+  },
+  {
+    "name": "MONGODB_CONNECT",
+    "value": "False"
+  },
+  {
+    "name": "MONGODB_PORT",
+    "value": 27017
+  },
+    
+  {
+    "name": "MONGODB_SETTINGS",
+    "value": {
+      "alias":"registry",
+      "db": "registry",
+      "host": "db",
+      "port": 27017,
+      "username": "admin",
+      "password": "password"
+      }
+  }
+]

@@ -3,10 +3,12 @@ from flask_mongoengine import MongoEngine
 from flask_user import UserMixin
 
 db = MongoEngine()
+ALIAS = os.getenv('MONGO_INITDB_DATABASE')
+print(f"alias: {ALIAS}")
 
 class User(db.Document, UserMixin):
 
-    meta = {'db_alias':'registry'}
+    meta = {'db_alias':ALIAS}
 
     active = db.BooleanField(default=False)
 
@@ -28,3 +30,6 @@ class User(db.Document, UserMixin):
     
     def __str__(self):
         return f"<User: {self.username}"
+
+    def _get_email(self):
+        return f"<User email: {self.email}"

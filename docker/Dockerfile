@@ -14,7 +14,6 @@ RUN mkdir /opt/requirements
 # Copy requirments in container
 ADD requirements /opt/requirements
 
-
 # build libraries for developent
 RUN pip install -r /opt/requirements/development.txt
 
@@ -24,6 +23,11 @@ FROM BASE as RUN
 
 # Point workdir to volume listed in docker-compose file
 WORKDIR /opt/code
+
+# Commented out for speedier reloading during development
+RUN addgroup --system user && adduser --system --no-create-home --group user
+RUN chown -R user:user /opt/code && chmod -R 755 /opt/code
+USER user 
 
 # Pull cached runtime from base container
 COPY --from=BASE /opt/venv /opt/venv 

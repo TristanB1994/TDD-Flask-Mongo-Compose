@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  
+  db:
+    image: mongo:latest
+    # container_name: mongo_test
+    restart: always
+    environment: 
+        MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+        MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+        MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    ports:
+        - ${MONGODB_PORT}:27017
+    volumes:
+        - ${PWD}/docker/mongo/testing/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d    
+    # user: 1000:1000

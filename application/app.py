@@ -23,8 +23,8 @@ def create_app(config_name):
     app.config['MONGODB_SETTINGS'] = json.loads(app.config['MONGODB_SETTINGS'])
     app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 
-    for k,v in app.config.items():
-        print(f"app_var {k}: {v}")
+    # for k,v in app.config.items():
+    #     print(f"app_var {k}: {v}")
         
     register_extensions(app)
 
@@ -36,18 +36,17 @@ def create_app(config_name):
     @app.route("/users")
     def users():
         try:
-            num_users = User.query.count()
+            num_users = User.objects().count()
             return f"Number of users: {num_users}"
         except:
-            return f"No users"
+            return f"No users, user info {User._get_db()}"
 
     return app
 
 def register_extensions(app):
 
     db.init_app(app)
-    # app.db = db.get_db(app.config['MONGODB_SETTINGS']['db'])
-    # print(f"app.db: {app.db}")
+    app.db = db
 
     serializer(app.secret_key)
 

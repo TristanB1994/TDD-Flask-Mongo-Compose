@@ -17,11 +17,12 @@ ADD requirements /opt/requirements
 # build libraries for production
 RUN pip install -r /opt/requirements/production.txt
 
+
 # Stage 2 handles application code
 FROM BASE as RUN
 
 # Point workdir to volume listed in docker-compose file
-RUN mkdir /opt/code
+# RUN mkdir /opt/code
 WORKDIR /opt/code
 
 # Pull cached runtime from base container

@@ -15,6 +15,10 @@
     "name": "SECRET_KEY",
     "value": "super-secret-key-987654rtyhujjhbsouijy"
   },
+  {
+    "name": "APPLICATION_DB",
+    "value": "testing"
+  },
 
   {
     "name": "USER_ENABLE_EMAIL",
@@ -25,32 +29,59 @@
     "value": "False"
   },
   {
-    "name": "USER_ENABLE_RETYPE_PASSWORD",
+    "name": "USER_REQUIRE_RETYPE_PASSWORD",
     "value": "False"
+  },
+  {
+    "name": "USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL",
+    "value": "True"
+  },
+  {
+    "name": "USER_APP_NAME",
+    "value": "Registry"
   },
 
   {
-    "name": "MONGODB_DB",
-    "value": "testing"
+    "name": "MONGODB_SETTINGS",
+    "value": {
+      "alias":"testing",
+      "db": "testing",
+      "host": "0.0.0.0",
+      "port": 27017,
+      "username": "admin",
+      "password": "password",
+      "connect": "false"
+      }
+  },
+
+  {
+    "name": "MONGO_INITDB_ROOT_USERNAME",
+    "value": "admin"
   },
   {
-    "name": "MONGODB_ALIAS",
-    "value": "testing"
+    "name": "MONGO_INITDB_ROOT_PASSWORD",
+    "value": "password"
   },
   {
-    "name": "MONGODB_HOST",
-    "value": "mongo"
+    "name": "MONGO_INITDB_DATABASE",
+    "value": "testing"
   },
   {
     "name": "MONGODB_PORT",
-    "value": 27017
+    "value": "27017"
   },
+
   {
-    "name": "MONGODB_USERNAME",
-    "value": "admin"
+    "name": "MONGODB_USER",
+    "value": "registry_user"
   },
   {
     "name": "MONGODB_PASSWORD",
     "value": "password"
+  },
+  {
+    "name": "MONGODB_CONNECT",
+    "value": "False"
   }
+
 ]
