@@ -13,7 +13,7 @@ from flask_mongoengine import MongoEngine
 # Ensure an environment variable exists and has a value
 def setenv(variable, default):
     os.environ[variable] = os.getenv(variable, default)
-
+    # print(f"env: {variable}:{os.environ[variable]}")
 
 setenv("APPLICATION_CONFIG", "development")
 
@@ -46,6 +46,9 @@ def configure_env(config):
             if key == 'MONGODB_SETTINGS':
                 setenv(key, json.dumps(value))
                 # print(f"Set {key}:{value}")
+
+            if key == 'DEBUG_TB_PANELS':
+                setenv(key, json.dumps(value))
 
             if key in os.environ:
                 # print(f"duplicate: {key}:{value}")
